@@ -17,7 +17,7 @@ class GPSLocation:
     latitude: float
     longitude: float
     altitude: Optional[float] = None
-    timestamp: float = None
+    timestamp: Optional[float] = None
     accuracy: Optional[float] = None
     location_name: Optional[str] = None
 
@@ -44,8 +44,8 @@ class GPSTracker:
         self.session_timeout = 600     # seconds - new session if gap longer than this
         
     def add_gps_reading(self, latitude: float, longitude: float, 
-                       altitude: float = None, accuracy: float = None,
-                       location_name: str = None) -> str:
+                       altitude: Optional[float] = None, accuracy: Optional[float] = None,
+                       location_name: Optional[str] = None) -> str:
         """Add a GPS reading and return location ID"""
         timestamp = time.time()
         
@@ -350,7 +350,7 @@ class KMLExporter:
 </Document>
 </kml>'''
     
-    def generate_kml(self, gps_tracker: GPSTracker, surveillance_devices: List = None,
+    def generate_kml(self, gps_tracker: GPSTracker, surveillance_devices: Optional[List] = None,
                     output_file: str = "cyt_analysis.kml") -> str:
         """Generate spectacular KML file with advanced surveillance visualization"""
         

@@ -10,8 +10,9 @@ import logging
 import os
 import time
 from datetime import datetime
+from typing import List, Optional
 
-from surveillance_detector import SurveillanceDetector, load_appearances_from_kismet
+from surveillance_detector import SurveillanceDetector, SuspiciousDevice, load_appearances_from_kismet
 from gps_tracker import GPSTracker, KMLExporter, simulate_gps_data
 from secure_credentials import secure_config_loader
 
@@ -43,8 +44,8 @@ class SurveillanceAnalyzer:
         # Analysis settings
         self.analysis_window_hours = 24  # Analyze last 24 hours by default
         
-    def analyze_kismet_data(self, kismet_db_path: str = None, 
-                          gps_data: list = None) -> dict:
+    def analyze_kismet_data(self, kismet_db_path: Optional[str] = None, 
+                          gps_data: Optional[list] = None)  -> dict[str, int | str | List[SuspiciousDevice] | None]:
         """Perform complete surveillance analysis on Kismet data"""
         
         print("🔍 Starting Surveillance Analysis...")
@@ -106,6 +107,9 @@ class SurveillanceAnalyzer:
                 
                 for db_file in db_files_to_process:
                     try:
+                        if db_file is None:
+                            raise Exception("❌ Invalid database file")
+                        
                         conn = sqlite3.connect(db_file)
                         cursor = conn.cursor()
                         
@@ -170,6 +174,8 @@ class SurveillanceAnalyzer:
             # Load devices from all databases, associating them with GPS locations
             primary_location = "Location_1"  # Use the first/primary location
             for db_file in db_files_to_process:
+                if db_file is None:
+                    raise Exception("❌ Invalid database file")
                 db_count = self._load_appearances_with_gps(db_file, primary_location)
                 print(f"   📁 {os.path.basename(db_file)}: {db_count} device appearances")
                 total_count += db_count

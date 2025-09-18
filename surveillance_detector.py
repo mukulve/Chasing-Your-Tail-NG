@@ -33,6 +33,8 @@ class SuspiciousDevice:
     last_seen: datetime
     total_appearances: int
     locations_seen: List[str]
+    stalking_score: float
+    stalking_reasons: List[str]
 
 class SurveillanceDetector:
     """Detect potential surveillance devices"""
@@ -50,8 +52,8 @@ class SurveillanceDetector:
         }
     
     def add_device_appearance(self, mac: str, timestamp: float, location_id: str, 
-                            ssids_probed: List[str] = None, signal_strength: float = None,
-                            device_type: str = None) -> None:
+                            ssids_probed: Optional[List[str]] = None, signal_strength: Optional[float] = None,
+                            device_type: Optional[str] = None) -> None:
         """Record a device appearance"""
         appearance = DeviceAppearance(
             mac=mac,
@@ -86,7 +88,9 @@ class SurveillanceDetector:
                     first_seen=datetime.fromtimestamp(min(a.timestamp for a in appearances)),
                     last_seen=datetime.fromtimestamp(max(a.timestamp for a in appearances)),
                     total_appearances=len(appearances),
-                    locations_seen=list(set(a.location_id for a in appearances))
+                    locations_seen=list(set(a.location_id for a in appearances)),
+                    stalking_score=0.0,
+                    stalking_reasons=[]
                 )
                 suspicious_devices.append(suspicious_device)
         
