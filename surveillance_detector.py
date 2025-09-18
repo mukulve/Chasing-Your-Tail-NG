@@ -5,11 +5,10 @@ Detects devices that may be following or tracking the user
 import json
 import sqlite3
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 from collections import defaultdict
-import pathlib
 
 logger = logging.getLogger(__name__)
 

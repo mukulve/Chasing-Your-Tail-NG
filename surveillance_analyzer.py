@@ -10,7 +10,6 @@ import logging
 import os
 import time
 from datetime import datetime
-from pathlib import Path
 
 from surveillance_detector import SurveillanceDetector, load_appearances_from_kismet
 from gps_tracker import GPSTracker, KMLExporter, simulate_gps_data

@@ -2,11 +2,10 @@
 GPS Integration for CYT
 Correlates device appearances with GPS locations for surveillance detection
 """
-import json
 import time
 import logging
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional, NamedTuple
+from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 import math
 
