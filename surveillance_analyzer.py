@@ -44,7 +44,7 @@ class SurveillanceAnalyzer:
         # Analysis settings
         self.analysis_window_hours = 24  # Analyze last 24 hours by default
         
-    def analyze_kismet_data(self, kismet_db_path: Optional[str] = None, 
+    def analyze_kismet_data(self, kismet_db_path: Optional[str | list] = None, 
                           gps_data: Optional[list] = None)  -> dict[str, int | str | List[SuspiciousDevice] | None]:
         """Perform complete surveillance analysis on Kismet data"""
         
@@ -129,7 +129,7 @@ class SurveillanceAnalyzer:
                             all_gps_coords.extend(db_coords)
                         
                     except Exception as e:
-                        print(f"   ❌ Error reading {os.path.basename(db_file)}: {e}")
+                        print(f"   ❌ Error reading {os.path.basename(str(db_file))}: {e}")
                         continue
                 
                 if all_gps_coords:
@@ -182,8 +182,10 @@ class SurveillanceAnalyzer:
         else:
             # Load from all databases without GPS correlation
             for db_file in db_files_to_process:
+                if db_file is None:
+                    raise Exception("❌ Invalid database file")
                 db_count = load_appearances_from_kismet(db_file, self.detector, "unknown_location")
-                print(f"   📁 {os.path.basename(db_file)}: {db_count} device appearances")
+                print(f"   📁 {os.path.basename(str(db_file))}: {db_count} device appearances")
                 total_count += db_count
         
         print(f"✅ Total device appearances loaded: {total_count:,}")
